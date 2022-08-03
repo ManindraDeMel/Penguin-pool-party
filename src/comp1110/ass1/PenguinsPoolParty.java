@@ -1,5 +1,8 @@
 package comp1110.ass1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PenguinsPoolParty {
 
     // The game board
@@ -198,9 +201,43 @@ public class PenguinsPoolParty {
      *         <north-east neighbour>, <south-east neighbour>, <south neighbour>,
      *         <south-west neighbour>, <north-west neighbour>.
      */
+
     public Hex[] getNeighbours(Hex hex) {
-        // FIXME: Task 4
-        return new Hex[6];
+        Hex[] neighbours = new Hex[6];
+        int[][] newCoords;
+        int[] coords = new int[] {hex.getX(), hex.getY()};
+        if (hex.isXEven()) {
+            newCoords = new int[][]{
+                    {coords[0], coords[1] - 1},
+                    {coords[0] + 1, coords[1]},
+                    {coords[0] + 1, coords[1] + 1},
+                    {coords[0], coords[1] + 1},
+                    {coords[0] - 1, coords[1] + 1},
+                    {coords[0] - 1, coords[1]}
+
+            };
+        }
+        else {
+            newCoords = new int[][]{
+                    {coords[0], coords[1] - 1},
+                    {coords[0] + 1, coords[1] - 1},
+                    {coords[0] + 1, coords[1]},
+                    {coords[0], coords[1] + 1},
+                    {coords[0] - 1, coords[1]},
+                    {coords[0] - 1, coords[1] - 1}
+
+            };
+        }
+
+        for (int i = 0; i < newCoords.length; i++) {
+            try {
+                neighbours[i] = this.getHex(newCoords[i][0], newCoords[i][1]);
+            }
+            catch (ArrayIndexOutOfBoundsException e) {
+                neighbours[i] = null;
+            }
+        }
+        return neighbours;
     }
 
     /**
@@ -341,3 +378,5 @@ public class PenguinsPoolParty {
     }
 
 }
+
+

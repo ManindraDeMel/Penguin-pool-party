@@ -102,16 +102,14 @@ public class Hex {
      * @return whether the hex is of type EMPTY or not
      */
     public boolean isEmpty() {
-        // FIXME: Task 2
-        return false;
+        return this.type == HexType.EMPTY;
     }
 
     /**
      * @return true if this hex's x-coordinate is even, false otherwise
      */
     public boolean isXEven() {
-        // FIXME: Task 3
-        return false;
+        return this.x % 2 == 0;
     }
 
     /**

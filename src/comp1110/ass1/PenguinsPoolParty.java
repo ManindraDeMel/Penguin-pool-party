@@ -207,7 +207,7 @@ public class PenguinsPoolParty {
         int[][] newCoords;
         int[] coords = new int[] {hex.getX(), hex.getY()};
         if (hex.isXEven()) {
-            newCoords = new int[][]{
+            newCoords = new int[][]{ // even hex's have different neighbouring coords
                     {coords[0], coords[1] - 1},
                     {coords[0] + 1, coords[1]},
                     {coords[0] + 1, coords[1] + 1},
@@ -218,7 +218,7 @@ public class PenguinsPoolParty {
             };
         }
         else {
-            newCoords = new int[][]{
+            newCoords = new int[][]{ // odd hex's have different neighbouring coords
                     {coords[0], coords[1] - 1},
                     {coords[0] + 1, coords[1] - 1},
                     {coords[0] + 1, coords[1]},
@@ -231,10 +231,10 @@ public class PenguinsPoolParty {
 
         for (int i = 0; i < newCoords.length; i++) {
             try {
-                neighbours[i] = this.getHex(newCoords[i][0], newCoords[i][1]);
+                neighbours[i] = this.getHex(newCoords[i][0], newCoords[i][1]); // if its in the board return the hex
             }
             catch (ArrayIndexOutOfBoundsException e) {
-                neighbours[i] = null;
+                neighbours[i] = null; // if its out of the board return null
             }
         }
         return neighbours;
@@ -250,8 +250,19 @@ public class PenguinsPoolParty {
      *
      * @return whether the current board represents a solution to the game
      */
+
     public boolean isSolution() {
-        // FIXME: Task 6
+        int numOfIce = 0;
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 5; x ++) {
+                if (this.getHex(x, y).getType() == HexType.ICE) {
+                    numOfIce++;
+                }
+            }
+        }
+        if (numOfIce == 16) {
+            return true;
+        }
         return false;
     }
 
@@ -276,9 +287,37 @@ public class PenguinsPoolParty {
      * @return    whether the placement of the given ice block is valid
      *            according to the game rules
      */
+    private List<int[]> iceCoords(Ice ice) {
+        List<int[]> icePlacementCoords = new ArrayList<>();
+        for (Hex hexCoord : ice.getHexes()) {
+            icePlacementCoords.add(new int[]{hexCoord.getX(), hexCoord.getY()});
+        }
+        return icePlacementCoords;
+    }
+
     public boolean isIcePlacementValid(Ice ice) {
-        // FIXME: Task 7
-        return false;
+        List<int[]> icePlacementCoords = this.iceCoords(ice);
+        try {
+            for (int[] coord : icePlacementCoords) {
+                if (this.getHex(coord[0], coord[1]).getType() != HexType.EMPTY) { // checking if the hex on the board is empty
+                    return false;
+                }
+            }
+            return true;
+        }
+        catch (ArrayIndexOutOfBoundsException e) { // out of the board
+            return false;
+        }
+    }
+
+
+    private void placeOrRemoveIceBlock(Ice ice, HexType type, Boolean onBoard) { // removing and placing iceblocks basically have the
+                                                                                 // same functionality, just with two differing parameters
+        List<int[]> icePlacementCoords = this.iceCoords(ice);
+        for (int[] coord : icePlacementCoords) {
+            this.setHex(coord[0], coord[1], type);
+        }
+        ice.setOnBoard(onBoard);
     }
 
     /**
@@ -299,8 +338,9 @@ public class PenguinsPoolParty {
      *
      * @param ice the ice block to place on the board
      */
+
     public void placeIceBlock(Ice ice) {
-        // FIXME: Task 8a
+        this.placeOrRemoveIceBlock(ice, HexType.ICE, true);
     }
 
     /**
@@ -324,7 +364,7 @@ public class PenguinsPoolParty {
      * @param ice the ice block to remove from the board
      */
     public void removeIceBlock(Ice ice) {
-        // FIXME: Task 8b
+        placeOrRemoveIceBlock(ice, HexType.EMPTY, false);
     }
 
     /**

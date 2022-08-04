@@ -112,8 +112,13 @@ public class Challenge {
      */
     public static Challenge newChallenge(int difficulty) {
         assert difficulty >= 0 && difficulty <= 3;
-        // FIXME: Task 5
-        return CHALLENGES[0];
+        Challenge newChallenge = switch (difficulty) {
+            case 0 -> CHALLENGES[(int)Math.floor(Math.random()*(16))];
+            case 1 -> CHALLENGES[(int)Math.floor(Math.random()*(16)+16)];
+            case 2 -> CHALLENGES[(int)Math.floor(Math.random()*(16)+32)];
+            case 3 -> CHALLENGES[(int)Math.floor(Math.random()*(12)+48)];
+            default -> null;
+        };
+        return newChallenge;
     }
-
 }

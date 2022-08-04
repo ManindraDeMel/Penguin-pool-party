@@ -199,8 +199,23 @@ public class Ice {
      *
      * For more details about ice block rotations, please consult the readme.
      */
-    public void fixSymmetries() {
-        // FIXME: Task 9
+    public void fixSymmetries() { // reverse the array
+        if (this.getId() == 'C' && this.getRotation() >= 3 && this.getRotation() <= 5) {
+            ///////////////////////////////// set the rotation
+            this.setRotation(this.getRotation() - 3);
+            ///////////////////////////////// get new origin
+            Hex[] hexes = this.getHexes();
+            int[] newOrigin = new int[]{hexes[(hexes.length) - 1].getX(), hexes[(hexes.length) - 1].getY()};
+            ///////////////////////////////// set new origin
+            this.setOriginX(newOrigin[0]);
+            this.setOriginY(newOrigin[1]);
+            ///////////////////////////////// reverse the array
+            for (int i = 0; i < hexes.length / 2; i++) {
+                Hex tempHex = hexes[i];
+                hexes[i] = hexes[hexes.length - 1 - i];
+                hexes[hexes.length - 1 - i] = tempHex;
+            }
+        }
     }
 
     /**

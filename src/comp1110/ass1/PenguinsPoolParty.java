@@ -2,7 +2,8 @@ package comp1110.ass1;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 public class PenguinsPoolParty {
 
     // The game board
@@ -340,7 +341,7 @@ public class PenguinsPoolParty {
      */
 
     public void placeIceBlock(Ice ice) {
-        this.placeOrRemoveIceBlock(ice, HexType.ICE, true);
+            this.placeOrRemoveIceBlock(ice, HexType.ICE, true);
     }
 
     /**
@@ -388,9 +389,32 @@ public class PenguinsPoolParty {
      *
      * @return all valid ice block placements from this game's board state
      */
+
     public String[] getAllValidPlacements() {
-        // FIXME: Task 10
-        return new String[0];
+        ArrayList<String> validIcePlacements = new ArrayList<>();
+        for (Ice ice : this.getIceBlocks()) {
+            if (!ice.isOnBoard()) {
+                for (int y = 0; y < 4; y++) {
+                    for (int x = 0; x < 5; x++) {
+                        Hex destHex = this.getHex(x, y);
+                        ice.translate(destHex);
+                        for (int r = 0; r <= 5; r++) {
+                            if (this.isIcePlacementValid(ice)) { // Im translating/rotating the ice im using so its updating it in the ArrayList
+                                String tempIce = ice.toString();
+                                validIcePlacements.add(tempIce);
+                            }
+                            ice.rotate60Degrees();
+                        }
+                    }
+                }
+            }
+        }
+        ///////////////////////////////////
+        String[] icePlacements = validIcePlacements.toArray(new String[0]); // Convert to Array from ArrayList
+        Arrays.sort(icePlacements); // Sort by ID, etc...
+        LinkedHashSet<String> removeDups = new LinkedHashSet<>(Arrays.asList(icePlacements)); // Remove ID 'C' duplicates
+        String[] listWithNull = removeDups.toArray(new String[0]); // Convert back to array
+        return listWithNull;
     }
 
     /**

@@ -1,9 +1,8 @@
 package comp1110.ass1;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
+import java.lang.reflect.Array;
+import java.util.*;
+
 public class PenguinsPoolParty {
 
     // The game board
@@ -399,7 +398,7 @@ public class PenguinsPoolParty {
                         Hex destHex = this.getHex(x, y);
                         ice.translate(destHex);
                         for (int r = 0; r <= 5; r++) {
-                            if (this.isIcePlacementValid(ice)) { // Im translating/rotating the ice im using so its updating it in the ArrayList
+                            if (this.isIcePlacementValid(ice)) { // I'm translating/rotating the ice im using so it's updating it in the ArrayList
                                 String tempIce = ice.toString();
                                 validIcePlacements.add(tempIce);
                             }
@@ -413,8 +412,8 @@ public class PenguinsPoolParty {
         String[] icePlacements = validIcePlacements.toArray(new String[0]); // Convert to Array from ArrayList
         Arrays.sort(icePlacements); // Sort by ID, etc...
         LinkedHashSet<String> removeDups = new LinkedHashSet<>(Arrays.asList(icePlacements)); // Remove ID 'C' duplicates
-        String[] listWithNull = removeDups.toArray(new String[0]); // Convert back to array
-        return listWithNull;
+        String[] finalIcePlacements = removeDups.toArray(new String[0]); // Convert back to array
+        return finalIcePlacements;
     }
 
     /**
@@ -436,11 +435,69 @@ public class PenguinsPoolParty {
      *
      * @return the solution to this game, in String form
      */
-    public String findSolution() {
-        // FIXME: Task 11
-        return "";
+
+    public Ice convertStringToIce (String ice) {
+        Ice newIce = switch (Character.toString(ice.charAt(0))) {
+            case "A" -> new Ice('A', new int[]{0, 0, 0, -1, -1, -1, -2, -1}, 0);
+            case "B" -> new Ice('B', new int[]{0, 0, 0, -1, -1, -1, -2, -2}, 0);
+            case "C" -> new Ice('C', new int[]{0, 0, 0, -1, -1, -1, -1, -2}, 0);
+            default -> new Ice('D', new int[]{0, 0, 0, -1, 0, -2, -1, -1}, 0);
+        };
+        int numberOfRotations = Integer.parseInt(Character.toString(ice.charAt(3)));
+        for (int i = 0; i < numberOfRotations; i++) {
+            newIce.rotate60Degrees();
+        }
+        newIce.translate(this.getHex(Integer.parseInt(Character.toString(ice.charAt(1))), Integer.parseInt(Character.toString(ice.charAt(2)))));
+        return newIce;
     }
 
+    public Ice[] filterIceByID (char id, Ice[] iceArr) {
+        ArrayList<Ice> newIceArray = new ArrayList<>();
+        for (Ice ice : iceArr) {
+            if (id == ice.toString().charAt(0)) {
+                newIceArray.add(ice);
+            }
+        }
+        return newIceArray.toArray(new Ice[0]);
+    }
+
+    public String findSolution() {
+        // FIXME: Task 11
+        String[] allPossiblePlacementsStr = this.getAllValidPlacements();
+        Ice[] allPossiblePlacements = new Ice[allPossiblePlacementsStr.length];
+        for (int i = 0; i < allPossiblePlacementsStr.length; i++) { // Convert Strings from getAllValidPlacememts in to Ice objects
+            allPossiblePlacements[i] = this.convertStringToIce(allPossiblePlacementsStr[i]);
+        }
+
+        Ice[] possibleAPlacements = this.filterIceByID("A".toCharArray()[0], allPossiblePlacements); // Filter by ICE ID
+        Ice[] possibleBPlacements = this.filterIceByID("B".toCharArray()[0], allPossiblePlacements);
+        Ice[] possibleCPlacements = this.filterIceByID("C".toCharArray()[0], allPossiblePlacements);
+        Ice[] possibleDPlacements = this.filterIceByID("D".toCharArray()[0], allPossiblePlacements);
+
+        for (Ice iceA : possibleAPlacements) { // Exhaust every combination of ICE, o(n^4) but oh well.
+            this.placeIceBlock(iceA);
+            for (Ice iceB : possibleBPlacements) {
+                if (this.isIcePlacementValid(iceB)) {
+                    this.placeIceBlock(iceB);
+                    for (Ice iceC : possibleCPlacements) {
+                        if (this.isIcePlacementValid(iceC)) {
+                            this.placeIceBlock(iceC);
+                            for (Ice iceD : possibleDPlacements) {
+                                if (this.isIcePlacementValid(iceD)) {
+                                    return iceA.toString()+ iceB.toString()+ iceC.toString()+ iceD;
+                                }
+                            }
+                            this.removeIceBlock(iceC);
+                        }
+                    }
+                    this.removeIceBlock(iceB);
+                }
+            }
+            this.removeIceBlock(iceA);
+        }
+        return null;
+    }
 }
+
 
 

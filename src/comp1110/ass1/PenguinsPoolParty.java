@@ -1,7 +1,9 @@
 package comp1110.ass1;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 public class PenguinsPoolParty {
 
@@ -260,10 +262,7 @@ public class PenguinsPoolParty {
                 }
             }
         }
-        if (numOfIce == 16) {
-            return true;
-        }
-        return false;
+        return numOfIce == 16;
     }
 
     /**
@@ -412,8 +411,7 @@ public class PenguinsPoolParty {
         String[] icePlacements = validIcePlacements.toArray(new String[0]); // Convert to Array from ArrayList
         Arrays.sort(icePlacements); // Sort by ID, etc...
         LinkedHashSet<String> removeDups = new LinkedHashSet<>(Arrays.asList(icePlacements)); // Remove ID 'C' duplicates
-        String[] finalIcePlacements = removeDups.toArray(new String[0]); // Convert back to array
-        return finalIcePlacements;
+        return removeDups.toArray(new String[0]);
     }
 
     /**

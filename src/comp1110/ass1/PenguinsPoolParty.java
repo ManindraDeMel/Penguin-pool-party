@@ -207,7 +207,7 @@ public class PenguinsPoolParty {
         int[][] newCoords;
         int[] coords = new int[] {hex.getX(), hex.getY()};
         if (hex.isXEven()) {
-            newCoords = new int[][]{ // even hex's have different neighbouring coords
+            newCoords = new int[][]{ // even hex's have different neighbouring coords (Probably could've been written better with a deeper knowledge about hexagons)
                     {coords[0], coords[1] - 1},
                     {coords[0] + 1, coords[1]},
                     {coords[0] + 1, coords[1] + 1},
@@ -251,7 +251,7 @@ public class PenguinsPoolParty {
      * @return whether the current board represents a solution to the game
      */
 
-    public boolean isSolution() {
+    public boolean isSolution() { // there are 4 Ice of which take 4 hexes of space. Therefore if there are 16 Ice hexes a solution exists.
         int numOfIce = 0;
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 5; x ++) {
@@ -287,7 +287,7 @@ public class PenguinsPoolParty {
      * @return    whether the placement of the given ice block is valid
      *            according to the game rules
      */
-    private List<int[]> iceCoords(Ice ice) {
+    private List<int[]> iceCoords(Ice ice) { // get the coords of the ice in a format that I prefer working with.
         List<int[]> icePlacementCoords = new ArrayList<>();
         for (Hex hexCoord : ice.getHexes()) {
             icePlacementCoords.add(new int[]{hexCoord.getX(), hexCoord.getY()});
@@ -311,7 +311,7 @@ public class PenguinsPoolParty {
     }
 
 
-    private void placeOrRemoveIceBlock(Ice ice, HexType type, Boolean onBoard) { // removing and placing iceblocks basically have the
+    private void placeOrRemoveIceBlock(Ice ice, HexType type, Boolean onBoard) { // removing and placing ice blocks basically have the
                                                                                  // same functionality, just with two differing parameters
         List<int[]> icePlacementCoords = this.iceCoords(ice);
         for (int[] coord : icePlacementCoords) {
@@ -436,7 +436,7 @@ public class PenguinsPoolParty {
      * @return the solution to this game, in String form
      */
 
-    public Ice convertStringToIce (String ice) {
+    public Ice convertStringToIce (String ice) { // like Ice's inherit method .toString() this is effectively the inverse method converting a string to an Ice object
         Ice newIce = switch (Character.toString(ice.charAt(0))) {
             case "A" -> new Ice('A', new int[]{0, 0, 0, -1, -1, -1, -2, -1}, 0);
             case "B" -> new Ice('B', new int[]{0, 0, 0, -1, -1, -1, -2, -2}, 0);
@@ -451,7 +451,7 @@ public class PenguinsPoolParty {
         return newIce;
     }
 
-    public Ice[] filterIceByID (char id, Ice[] iceArr) {
+    public Ice[] filterIceByID (char id, Ice[] iceArr) { // Filters our each Ice by its ID. i.e. "A" or "B"
         ArrayList<Ice> newIceArray = new ArrayList<>();
         for (Ice ice : iceArr) {
             if (id == ice.toString().charAt(0)) {

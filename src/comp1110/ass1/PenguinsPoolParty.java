@@ -462,7 +462,6 @@ public class PenguinsPoolParty {
     }
 
     public String findSolution() {
-        // FIXME: Task 11
         String[] allPossiblePlacementsStr = this.getAllValidPlacements();
         Ice[] allPossiblePlacements = new Ice[allPossiblePlacementsStr.length];
         for (int i = 0; i < allPossiblePlacementsStr.length; i++) { // Convert Strings from getAllValidPlacememts in to Ice objects

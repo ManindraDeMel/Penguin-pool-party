@@ -231,7 +231,7 @@ public class PenguinsPoolParty {
             };
         }
 
-        for (int i = 0; i < newCoords.length; i++) {
+        for (int i = 0; i < newCoords.length; i++) { // finally return pieces if on the board
             try {
                 neighbours[i] = this.getHex(newCoords[i][0], newCoords[i][1]); // if its in the board return the hex
             }
